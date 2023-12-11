@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".HomeActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="-50dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logo" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/vorabfragebogen"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:fontFamily="@font/poppins_bold"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:text="Vorabfragebogen"
+
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/abschlussfragebogen"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:fontFamily="@font/poppins_bold"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:text="Abschlusfragebogen"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bewertung_der_fahrt"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:fontFamily="@font/poppins_bold"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:text="Bewertung der Fahrt"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+</LinearLayout>
