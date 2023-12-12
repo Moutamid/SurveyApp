@@ -16,7 +16,6 @@ import com.moutamid.surveyapp.R;
 import java.util.List;
 
 public class BewetungDerFahrtQuestionAdapter extends RecyclerView.Adapter<BewetungDerFahrtQuestionAdapter.ViewHolder> {
-
     private List<RendomQuestionModel> questions;
 
     public BewetungDerFahrtQuestionAdapter(List<RendomQuestionModel> questions) {
@@ -34,7 +33,6 @@ public class BewetungDerFahrtQuestionAdapter extends RecyclerView.Adapter<Bewetu
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RendomQuestionModel question = questions.get(position);
 
-        // Set question text
         holder.questionText.setText(question.getQuestionText());
 
         // Set options using radio buttons
@@ -49,11 +47,22 @@ public class BewetungDerFahrtQuestionAdapter extends RecyclerView.Adapter<Bewetu
                 radioButton.setChecked(true);
             }
         }
+
+        holder.optionsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                question.setSelectedOptionIndex(checkedId);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return questions.size();
+    }
+
+    public List<RendomQuestionModel> getQuestions() {
+        return questions;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

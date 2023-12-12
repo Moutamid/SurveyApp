@@ -1,10 +1,13 @@
 package com.moutamid.surveyapp.Model;
 import java.util.List;
 
+
+import java.util.List;
+
 public class RendomQuestionModel {
     private String questionText;
     private List<String> options;
-    private int selectedOptionIndex;
+    private int selectedOptionIndex = -1;
 
     public RendomQuestionModel(String questionText, List<String> options, int selectedOptionIndex) {
         this.questionText = questionText;
@@ -22,5 +25,10 @@ public class RendomQuestionModel {
 
     public int getSelectedOptionIndex() {
         return selectedOptionIndex;
+    }
+
+    // Add this setter method
+    public void setSelectedOptionIndex(int selectedOptionIndex) {
+        this.selectedOptionIndex = selectedOptionIndex;
     }
 }

@@ -47,5 +47,6 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-database:19.4.0")
+    implementation("com.fxn769:stash:1.3.2")
 
 }

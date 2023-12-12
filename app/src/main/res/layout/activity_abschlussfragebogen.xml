@@ -131,36 +131,8 @@
             android:textColorHint="#685F5F"
             android:textSize="14dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/poppins_bold"
-            android:gravity="center"
-            android:text="Erwartungen an einen idealen Spurhalteassistenten"
 
-            android:textColor="@color/black"
-            android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="left"
-            android:text="Definition eines Spurhalteassistenten: Bei diesem System handelt es sich um ein Fahrerassistenzsystem, das den Fahrerdurch aktiven Eingriff in die Lenkung bei der Spurhaltung unterstützt.Der Fahrer kann das System jederzeit übersteuern und behält damit die Verantwortung für das Fahrzeug."
-            android:padding="10dp"
-            android:layout_marginLeft="8dp"
-            android:textColor="#504A4A"
-            android:textSize="13sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp" />
 
 
         <androidx.appcompat.widget.AppCompatButton

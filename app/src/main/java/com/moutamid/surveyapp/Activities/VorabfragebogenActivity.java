@@ -4,15 +4,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moutamid.surveyapp.Adapter.QuestionAdapter;
+import com.fxn.stash.Stash;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.moutamid.surveyapp.Adapter.RandomQuestionAdapter;
-import com.moutamid.surveyapp.Model.QuestionModel;
 import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
@@ -26,13 +28,16 @@ import java.util.Map;
 public class VorabfragebogenActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private QuestionAdapter adapter;
+    private RandomQuestionAdapter adapter1;
+    private RandomQuestionAdapter adapter2;
+    private RandomQuestionAdapter adapter3;
+    private RandomQuestionAdapter adapter4;
     private List<SelectedAnswerModel> selectedAnswers = new ArrayList<>();
-    private List<RendomQuestionModel> rendomQuestionModels;
+    private List<RendomQuestionModel> RendomQuestionModels;
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
     private RecyclerView recyclerView3;
-    private RandomQuestionAdapter randomQuestionAdapter;
+    EditText editTextComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,45 +45,46 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerView);
+        editTextComments = findViewById(R.id.editTextComments);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<QuestionModel> questionList = generateQuestionList();
-        adapter = new QuestionAdapter(questionList, selectedAnswers); // Pass the selectedAnswers list
-        recyclerView.setAdapter(adapter);
+        List<RendomQuestionModel> questionList = generateQuestionList();
+        adapter1 = new RandomQuestionAdapter(questionList); // Pass the selectedAnswers list
+        recyclerView.setAdapter(adapter1);
 
         //Dynamic
         recyclerView1 = findViewById(R.id.recyclerView1);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
 
-        rendomQuestionModels = generateDynamicQuestionList();
-        randomQuestionAdapter = new RandomQuestionAdapter(rendomQuestionModels);
-        recyclerView1.setAdapter(randomQuestionAdapter);
+        RendomQuestionModels = generateDynamicQuestionList();
+        adapter2 = new RandomQuestionAdapter(RendomQuestionModels);
+        recyclerView1.setAdapter(adapter2);
 
         // 3rd recyclerView
 
         recyclerView2 = findViewById(R.id.recyclerView2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
-        rendomQuestionModels = generateSecondDynamicQuestionList();
-        randomQuestionAdapter = new RandomQuestionAdapter(rendomQuestionModels);
-        recyclerView2.setAdapter(randomQuestionAdapter);
+        RendomQuestionModels = generateSecondDynamicQuestionList();
+        adapter3 = new RandomQuestionAdapter(RendomQuestionModels);
+        recyclerView2.setAdapter(adapter3);
 // 4th recyclerview
         recyclerView3 = findViewById(R.id.recyclerView3);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
 
-        rendomQuestionModels = generateThirdDynamicQuestionList();
-        randomQuestionAdapter = new RandomQuestionAdapter(rendomQuestionModels);
-        recyclerView3.setAdapter(randomQuestionAdapter);
+        RendomQuestionModels = generateThirdDynamicQuestionList();
+        adapter4 = new RandomQuestionAdapter(RendomQuestionModels);
+        recyclerView3.setAdapter(adapter4);
         Button submitButton = findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitAnswers();
+//                submitAnswers();
             }
         });
     }
 
-    private List<QuestionModel> generateQuestionList() {
-        List<QuestionModel> questions = new ArrayList<>();
+    private List<RendomQuestionModel> generateQuestionList() {
+        List<RendomQuestionModel> questions = new ArrayList<>();
         // Add your questions to the list with options and correct answer index
 
         List<String> options = new ArrayList<>();
@@ -112,7 +118,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         };
 
         for (String questionText : questionTexts) {
-            questions.add(new QuestionModel(questionText, options, 7));
+            questions.add(new RendomQuestionModel(questionText, options, 7));
         }
         // Add other questions
         return questions;
@@ -138,30 +144,6 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         }
     }
 
-    private void submitAnswers() {
-        // Implement code to submit answers to Firebase
-        // For simplicity, let's assume answers are stored in a Map<String, String>
-        Map<String, String> answersMap = new HashMap<>();
-
-        // Iterate through the selected answers and add them to the map
-        for (SelectedAnswerModel selectedAnswer : selectedAnswers) {
-            int questionPosition = selectedAnswer.getQuestionPosition();
-            int selectedOptionIndex = selectedAnswer.getSelectedOptionIndex();
-
-            // You can access the actual question and its options from the adapter
-            QuestionModel questionModel = adapter.getQuestionAtPosition(questionPosition);
-            String questionText = questionModel.getQuestion();
-            String selectedOption = questionModel.getOptions().get(selectedOptionIndex);
-
-            // Add the question and its selected option to the map
-            answersMap.put(questionText, selectedOption);
-        }
-
-        Log.d("SurveyApp", "answers" + answersMap + "");
-
-        // Upload the answers to Firebase
-//        databaseReference.child("UserResponses").setValue(answersMap);
-    }
 
     private List<RendomQuestionModel> generateDynamicQuestionList() {
         List<RendomQuestionModel> questions = new ArrayList<>();
@@ -221,6 +203,86 @@ public class VorabfragebogenActivity extends AppCompatActivity {
 
 
         return questions;
+    }
+
+    private boolean validateAllQuestions1() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses")
+                .child("Vorabfragebogen").child(Stash.getString("device_id"));
+
+        for (RendomQuestionModel question : adapter1.getQuestions()) {
+            if (question.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question.getQuestionText());
+                return false;
+            }
+
+            Map<String, Object> questionData = new HashMap<>();
+            questionData.put("questionText", question.getQuestionText());
+            questionData.put("selectedOptionText", question.getOptions().get(question.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+
+        for (RendomQuestionModel question2 : adapter2.getQuestions()) {
+            if (question2.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question2.getQuestionText());
+                return false;
+            }
+
+            Map<String, Object> questionData2 = new HashMap<>();
+            questionData2.put("questionText", question2.getQuestionText());
+            questionData2.put("selectedOptionText", question2.getOptions().get(question2.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData2)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+
+        for (RendomQuestionModel question3 : adapter3.getQuestions()) {
+
+            if (question3.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question3.getQuestionText());
+                return false;
+            }
+
+            Map<String, Object> questionData3 = new HashMap<>();
+            questionData3.put("questionText", question3.getQuestionText());
+            questionData3.put("selectedOptionText", question3.getOptions().get(question3.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData3)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+
+        for (RendomQuestionModel question4 : adapter4.getQuestions()) {
+            if (question4.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question4.getQuestionText());
+                return false;
+            }
+
+            Map<String, Object> questionData4 = new HashMap<>();
+            questionData4.put("questionText", question4.getQuestionText());
+            questionData4.put("selectedOptionText", question4.getOptions().get(question4.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData4)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+        Map<String, Object> questionData4 = new HashMap<>();
+        questionData4.put("comments", editTextComments.getText().toString());
+
+        // Add the data to Realtime Database
+        databaseReference.push().setValue(questionData4)
+                .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+
+        // All questions are answered
+        return true;
     }
 
 }

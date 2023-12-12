@@ -10,50 +10,50 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moutamid.surveyapp.Model.QuestionModel;
-import com.moutamid.surveyapp.Model.SelectedAnswerModel;
+import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.R;
 
 import java.util.List;
 
 public class AbschlussfragebogenQuestionAdapter extends RecyclerView.Adapter<AbschlussfragebogenQuestionAdapter.ViewHolder> {
+    private List<RendomQuestionModel> questions;
 
-    private final List<QuestionModel> questions;
-    private final List<SelectedAnswerModel> selectedAnswers;
-
-    public AbschlussfragebogenQuestionAdapter(List<QuestionModel> questions, List<SelectedAnswerModel> selectedAnswers) {
+    public AbschlussfragebogenQuestionAdapter(List<RendomQuestionModel> questions) {
         this.questions = questions;
-        this.selectedAnswers = selectedAnswers;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.abschlussfragebogen_question_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_question, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        QuestionModel questionModel = questions.get(position);
-        holder.questionText.setText(questionModel.getQuestion());
-        holder.radioButtonOption1.setText(questionModel.getOptions().get(0));
-        holder.radioButtonOption2.setText(questionModel.getOptions().get(1));
-        holder.radioButtonOption3.setText(questionModel.getOptions().get(2));
-        holder.radioButtonOption4.setText(questionModel.getOptions().get(3));
-        holder.radioButtonOption5.setText(questionModel.getOptions().get(4));
+        RendomQuestionModel question = questions.get(position);
 
-        // Set up radio buttons and their listeners here
-        holder.radioButtonOption1.setTag(position);
-        holder.radioButtonOption2.setTag(position);
-        holder.radioButtonOption3.setTag(position);
-        holder.radioButtonOption4.setTag(position);
-        holder.radioButtonOption5.setTag(position);
-        // Check the corresponding radio button based on selected answers
-//        checkSelectedAnswers(holder, position);
+        holder.questionText.setText(question.getQuestionText());
 
-        // Check the corresponding radio button based on selected answers
-        checkSelectedAnswers(holder, position);
+        // Set options using radio buttons
+        holder.optionsRadioGroup.removeAllViews();
+        for (int i = 0; i < question.getOptions().size(); i++) {
+            RadioButton radioButton = new RadioButton(holder.itemView.getContext());
+            radioButton.setText(question.getOptions().get(i));
+            radioButton.setId(i);
+            holder.optionsRadioGroup.addView(radioButton);
+
+            if (question.getSelectedOptionIndex() == i) {
+                radioButton.setChecked(true);
+            }
+        }
+
+        holder.optionsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                question.setSelectedOptionIndex(checkedId);
+            }
+        });
     }
 
     @Override
@@ -61,49 +61,18 @@ public class AbschlussfragebogenQuestionAdapter extends RecyclerView.Adapter<Abs
         return questions.size();
     }
 
+    public List<RendomQuestionModel> getQuestions() {
+        return questions;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView questionText;
-        RadioGroup radioGroupOptions;
-        RadioButton radioButtonOption1, radioButtonOption2, radioButtonOption3, radioButtonOption4, radioButtonOption5, radioButtonOption6;
+        RadioGroup optionsRadioGroup;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             questionText = itemView.findViewById(R.id.questionText);
-            radioGroupOptions = itemView.findViewById(R.id.radioGroupOptions);
-            radioButtonOption1 = itemView.findViewById(R.id.radioButtonOption1);
-            radioButtonOption2 = itemView.findViewById(R.id.radioButtonOption2);
-            radioButtonOption3 = itemView.findViewById(R.id.radioButtonOption3);
-            radioButtonOption4 = itemView.findViewById(R.id.radioButtonOption4);
-            radioButtonOption5 = itemView.findViewById(R.id.radioButtonOption5);
+            optionsRadioGroup = itemView.findViewById(R.id.optionsRadioGroup);
         }
-    }
-
-    private void checkSelectedAnswers(ViewHolder holder, int position) {
-        for (SelectedAnswerModel selectedAnswer : selectedAnswers) {
-            if (selectedAnswer.getQuestionPosition() == position) {
-                int selectedOptionIndex = selectedAnswer.getSelectedOptionIndex();
-                switch (selectedOptionIndex) {
-                    case 0:
-                        holder.radioButtonOption1.setChecked(true);
-                        break;
-                    case 1:
-                        holder.radioButtonOption2.setChecked(true);
-                        break;
-                    case 2:
-                        holder.radioButtonOption3.setChecked(true);
-                        break;
-                    case 3:
-                        holder.radioButtonOption4.setChecked(true);
-                        break;
-                    case 4:
-                        holder.radioButtonOption5.setChecked(true);
-                        break;
-                }
-            }
-        }
-    }
-
-    public QuestionModel getQuestionAtPosition(int position) {
-        return questions.get(position);
     }
 }

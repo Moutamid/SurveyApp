@@ -1,39 +1,48 @@
 package com.moutamid.surveyapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.fxn.stash.Stash;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.moutamid.surveyapp.Adapter.AbschlussfragebogenQuestionAdapter;
-import com.moutamid.surveyapp.Adapter.QuestionAdapter;
-import com.moutamid.surveyapp.Model.QuestionModel;
+import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AbschlussfragebogenActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private AbschlussfragebogenQuestionAdapter adapter;
+    private AbschlussfragebogenQuestionAdapter adapter1;
+    private AbschlussfragebogenQuestionAdapter adapter2;
+    private AbschlussfragebogenQuestionAdapter adapter3;
     private List<SelectedAnswerModel> selectedAnswers = new ArrayList<>();
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
 
+    EditText editTextComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_abschlussfragebogen);
 
+        editTextComments = findViewById(R.id.editTextComments);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView1 = findViewById(R.id.recyclerView1);
@@ -42,96 +51,159 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
 
 
-        List<QuestionModel> questionList = generateQuestionList();
-        adapter = new AbschlussfragebogenQuestionAdapter(questionList, selectedAnswers); // Pass the selectedAnswers list
-        recyclerView.setAdapter(adapter);
+        List<RendomQuestionModel> questionList = generateQuestionList();
+        adapter1 = new AbschlussfragebogenQuestionAdapter(questionList); // Pass the selectedAnswers list
+        recyclerView.setAdapter(adapter1);
 
-       List<QuestionModel> questionList1 = generateSecondQuestionList();
-        adapter = new AbschlussfragebogenQuestionAdapter(questionList1, selectedAnswers); // Pass the selectedAnswers list
-        recyclerView1.setAdapter(adapter);
+        List<RendomQuestionModel> questionList1 = generateSecondQuestionList();
+        adapter2 = new AbschlussfragebogenQuestionAdapter(questionList1); // Pass the selectedAnswers list
+        recyclerView1.setAdapter(adapter2);
 
-       List<QuestionModel> questionList2 = generateThirdQuestionList();
-        adapter = new AbschlussfragebogenQuestionAdapter(questionList2, selectedAnswers); // Pass the selectedAnswers list
-        recyclerView2.setAdapter(adapter);
+        List<RendomQuestionModel> questionList2 = generateThirdQuestionList();
+        adapter3 = new AbschlussfragebogenQuestionAdapter(questionList2); // Pass the selectedAnswers list
+        recyclerView2.setAdapter(adapter3);
         Button submitButton = findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                submitAnswers();
+            public void onClick(View v) {
+                Log.d("ButtonClicked", "Submit button clicked");
+                if (validateAllQuestions1()) {
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select all questions", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
-    private List<QuestionModel> generateQuestionList() {
-        List<QuestionModel> questions = new ArrayList<>();
-        // Add your questions to the list with options and correct answer index
 
-        List<String> options = new ArrayList<>();
+    private List<RendomQuestionModel> generateQuestionList() {
+        List<RendomQuestionModel> questions = new ArrayList<>();
 
-        options.add("Sehr gering");
-        options.add("gering");
-        options.add("mittel");
-        options.add("hoch");
-        options.add("Sehr hoch");
+        List<String> options1 = Arrays.asList(
+                "Sehr gering",
+                "gering",
+                "mittel",
+                "hoch",
+                "Sehr hoch"
+        );
+        questions.add(new RendomQuestionModel("Wie gut konnten Sie das Verhalten des Systems in den eben erlebten Situationen vorhersagen?", options1, 7));
+        List<String> options2 = Arrays.asList(
+                "Sehr gering",
+                "gering",
+                "mittel",
+                "hoch",
+                "Sehr hoch"
+        );
+        questions.add(new RendomQuestionModel("Wie sehr konnten Sie sich in den eben erlebten Situationen darauf verlassen, dass das System funktioniert?", options2, 7));
+        List<String> options3 = Arrays.asList(
+                "Sehr gering",
+                "gering",
+                "mittel",
+                "hoch",
+                "Sehr hoch"
+        );
+        questions.add(new RendomQuestionModel("Wie hoch ist Ihr Glaube daran, dass das System mit Situationen dieser Art jederzeit umgehen kann?", options3, 7));
+        List<String> options4 = Arrays.asList(
+                "Sehr gering",
+                "gering",
+                "mittel",
+                "hoch",
+                "Sehr hoch"
+        );
+        questions.add(new RendomQuestionModel("Wie hoch ist Ihr Vertrauen in das System nach der eben erlebten Fahrt?", options4, 7));
 
-        String[] questionTexts = {
-                "Wie gut konnten Sie das Verhalten des Systems in den eben erlebten Situationen vorhersagen?",
-                "Wie sehr konnten Sie sich in den eben erlebten Situationen darauf verlassen, dass das System funktioniert?",
-                "Wie hoch ist Ihr Glaube daran, dass das System mit Situationen dieser Art jederzeit umgehen kann?",
-                "Wie hoch ist Ihr Vertrauen in das System nach der eben erlebten Fahrt?",
-        };
 
-
-        for (String questionText : questionTexts) {
-            questions.add(new QuestionModel(questionText, options, 0));
-        }
+//        for (String questionText : questions) {
+//            questions.add(new RendomQuestionModel(questionText, options, 7));
+//        }
         // Add other questions
         return questions;
     }
-    private List<QuestionModel> generateSecondQuestionList() {
-        List<QuestionModel> questions = new ArrayList<>();
-        // Add your questions to the list with options and correct answer index
 
-        List<String> options = new ArrayList<>();
+    private List<RendomQuestionModel> generateSecondQuestionList() {
+        List<RendomQuestionModel> questions = new ArrayList<>();
 
-        options.add("Stimme überhaupt nicht zu");
-        options.add("Stimme nicht zu");
-        options.add("Weder noch");
-        options.add("Stimme zu");
-        options.add("Stimme voll und ganz zu");
-        String[] questionTexts = {
-                "Dass das System verschiedene Ausprägungen hat, erachte ich als sinnvoll.",
-                "Die Spreizung der Varianten erachte ich als zu groß.",
-                "Die Spreizung der Varianten erachte ich als zu klein."
-        };
+        List<String> options1 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Dass das System verschiedene Ausprägungen hat, erachte ich als sinnvoll.", options1, 7));
 
+        List<String> options2 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Die Spreizung der Varianten erachte ich als zu groß.", options2, 7));
 
-        for (String questionText : questionTexts) {
-            questions.add(new QuestionModel(questionText, options, 0));
-        }
-        // Add other questions
+        List<String> options3 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Die Spreizung der Varianten erachte ich als zu klein.", options3, 7));
+
+        // Add other questions if needed
+
         return questions;
     }
-    private List<QuestionModel> generateThirdQuestionList() {
-        List<QuestionModel> questions = new ArrayList<>();
 
-        List<String> options = new ArrayList<>();
-        options.add("Stimme überhaupt nicht zu");
-        options.add("Stimme nicht zu");
-        options.add("Weder noch");
-        options.add("Stimme zu");
-        options.add("Stimme voll und ganz zu");
+    private List<RendomQuestionModel> generateThirdQuestionList() {
+        List<RendomQuestionModel> questions = new ArrayList<>();
 
-        String[] questionTexts = {
-                "Wie bewerten Sie das System insgesamt?",
-                "Wie weit ist das System von Ihrem idealen Spurhalteassistenten entfernt?",
-                "Wie wahrscheinlich ist es, dass Sie ein solches System in Zukunft nutzen würden?",
-                "Nach dem Versuch verspüre ich Übelkeit/Unwohlsein.",
-                "Wie bewerten Sie das Fahrerlebnis insgesamt?"
-        };
+        List<String> options1 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Wie bewerten Sie das System insgesamt?", options1, 7));
 
-        for (String questionText : questionTexts) {
-            questions.add(new QuestionModel(questionText, options, 0));
-        }
+        List<String> options2 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Wie weit ist das System von Ihrem idealen Spurhalteassistenten entfernt?", options2, 7));
+
+        List<String> options3 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Wie wahrscheinlich ist es, dass Sie ein solches System in Zukunft nutzen würden?", options3, 7));
+
+        List<String> options4 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Nach dem Versuch verspüre ich Übelkeit/Unwohlsein.", options4, 7));
+
+        List<String> options5 = Arrays.asList(
+                "Stimme überhaupt nicht zu",
+                "Stimme nicht zu",
+                "Weder noch",
+                "Stimme zu",
+                "Stimme voll und ganz zu"
+        );
+        questions.add(new RendomQuestionModel("Wie bewerten Sie das Fahrerlebnis insgesamt?", options5, 7));
+
+        // Add other questions if needed
 
         return questions;
     }
@@ -154,30 +226,71 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
         }
     }
 
-    private void submitAnswers() {
-        // Implement code to submit answers to Firebase
-        // For simplicity, let's assume answers are stored in a Map<String, String>
-        Map<String, String> answersMap = new HashMap<>();
 
-        // Iterate through the selected answers and add them to the map
-        for (SelectedAnswerModel selectedAnswer : selectedAnswers) {
-            int questionPosition = selectedAnswer.getQuestionPosition();
-            int selectedOptionIndex = selectedAnswer.getSelectedOptionIndex();
+    private boolean validateAllQuestions1() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses")
+                .child("Abschlussfragebogen").child(Stash.getString("device_id"));
 
-            // You can access the actual question and its options from the adapter
-            QuestionModel questionModel = adapter.getQuestionAtPosition(questionPosition);
-            String questionText = questionModel.getQuestion();
-            String selectedOption = questionModel.getOptions().get(selectedOptionIndex);
+        for (RendomQuestionModel question : adapter1.getQuestions()) {
+            if (question.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question.getQuestionText());
+                return false;
+            }
 
-            // Add the question and its selected option to the map
-            answersMap.put(questionText, selectedOption);
+            Map<String, Object> questionData = new HashMap<>();
+            questionData.put("questionText", question.getQuestionText());
+            questionData.put("selectedOptionText", question.getOptions().get(question.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
         }
 
-        Log.d("SurveyApp", "answers" + answersMap + "");
+        for (RendomQuestionModel question2 : adapter2.getQuestions()) {
+            if (question2.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question2.getQuestionText());
+                return false;
+            }
 
-        // Upload the answers to Firebase
-//        databaseReference.child("UserResponses").setValue(answersMap);
+            Map<String, Object> questionData2 = new HashMap<>();
+            questionData2.put("questionText", question2.getQuestionText());
+            questionData2.put("selectedOptionText", question2.getOptions().get(question2.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData2)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+
+        for (RendomQuestionModel question3 : adapter3.getQuestions()) {
+            if (question3.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question3.getQuestionText());
+                return false;
+            }
+
+            Map<String, Object> questionData3 = new HashMap<>();
+            questionData3.put("questionText", question3.getQuestionText());
+            questionData3.put("selectedOptionText", question3.getOptions().get(question3.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData3)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+
+        Map<String, Object> questionData4 = new HashMap<>();
+        questionData4.put("comments", editTextComments.getText().toString());
+
+        // Add the data to Realtime Database
+        databaseReference.push().setValue(questionData4)
+                .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+
+        // All questions are answered
+        return true;
     }
+
 
 
 }

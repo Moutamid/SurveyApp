@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
+import com.fxn.stash.Stash;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.moutamid.surveyapp.Adapter.AbschlussfragebogenQuestionAdapter;
 import com.moutamid.surveyapp.Adapter.BewetungDerFahrtQuestionAdapter;
 import com.moutamid.surveyapp.Model.QuestionModel;
@@ -35,11 +39,22 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bewertung_der_fahrt);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
         List<RendomQuestionModel> questionList = generateDynamicQuestionList();
         adapter = new BewetungDerFahrtQuestionAdapter(questionList); // Pass the selectedAnswers list
         recyclerView.setAdapter(adapter);
+        Button submitButton = findViewById(R.id.submitButton);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("ButtonClicked", "Submit button clicked");
+                if (validateAllQuestions()) {
+                  finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Please select all questions", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
 
     }
@@ -115,7 +130,7 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
                 "hilfreich",
                 "sehr hilfreich"
         );
-        questions.add(new RendomQuestionModel("Wie bewerten Sie die Unterstützung bei der Fahrzeugführung insgesamt?", options7, 9));
+        questions.add(new RendomQuestionModel("Wie bewerten Sie die Unterstützung bei der Fahrzeugführung insgesamt?", options7, 7));
 
         // Question 8
         List<String> options8 = Arrays.asList(
@@ -151,5 +166,35 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
 
 
 
+    private boolean validateAllQuestions() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses").child("BewertungDerFahrt").child(Stash.getString("device_id"));
+
+        for (RendomQuestionModel question : adapter.getQuestions()) {
+            if (question.getSelectedOptionIndex() == 7) {
+                Log.d("Validation", "Question not answered: " + question.getQuestionText());
+                return false;
+            } else {
+                Log.d("Validation", "Question answered - Selected option index: " + question.getSelectedOptionIndex());
+
+                // Create a map to represent the data you want to store in Realtime Database
+                Map<String, Object> questionData = new HashMap<>();
+                questionData.put("questionText", question.getQuestionText());
+                questionData.put("selectedOptionText", question.getOptions().get(question.getSelectedOptionIndex()));
+
+                // Add the data to Realtime Database
+                databaseReference.push().setValue(questionData)
+                        .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                        .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+            }
+        }
+        // All questions are answered
+        return true;
+    }
+
 
 }
+
+
+
+
+
