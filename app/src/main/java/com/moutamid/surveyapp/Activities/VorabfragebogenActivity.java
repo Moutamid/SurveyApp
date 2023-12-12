@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,11 +33,13 @@ public class VorabfragebogenActivity extends AppCompatActivity {
     private RandomQuestionAdapter adapter2;
     private RandomQuestionAdapter adapter3;
     private RandomQuestionAdapter adapter4;
+    private RandomQuestionAdapter adapter5;
     private List<SelectedAnswerModel> selectedAnswers = new ArrayList<>();
     private List<RendomQuestionModel> RendomQuestionModels;
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
     private RecyclerView recyclerView3;
+    private RecyclerView recyclerView4;
     EditText editTextComments;
 
     @Override
@@ -67,6 +70,8 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         RendomQuestionModels = generateSecondDynamicQuestionList();
         adapter3 = new RandomQuestionAdapter(RendomQuestionModels);
         recyclerView2.setAdapter(adapter3);
+
+
 // 4th recyclerview
         recyclerView3 = findViewById(R.id.recyclerView3);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
@@ -74,11 +79,25 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         RendomQuestionModels = generateThirdDynamicQuestionList();
         adapter4 = new RandomQuestionAdapter(RendomQuestionModels);
         recyclerView3.setAdapter(adapter4);
+
+
+        recyclerView4 = findViewById(R.id.recyclerView4);
+        recyclerView4.setLayoutManager(new LinearLayoutManager(this));
+
+        RendomQuestionModels = generateForthDynamicQuestionList();
+        adapter5 = new RandomQuestionAdapter(RendomQuestionModels);
+        recyclerView4.setAdapter(adapter5);
         Button submitButton = findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-//                submitAnswers();
+            public void onClick(View v) {
+                Log.d("ButtonClicked", "Submit button clicked");
+                if (validateAllQuestions1()) {
+                    finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Please select all questions", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -118,7 +137,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         };
 
         for (String questionText : questionTexts) {
-            questions.add(new RendomQuestionModel(questionText, options, 7));
+            questions.add(new RendomQuestionModel(questionText, options, 8));
         }
         // Add other questions
         return questions;
@@ -159,11 +178,11 @@ public class VorabfragebogenActivity extends AppCompatActivity {
                 "Spurverlassenswarnung",
                 "Spurwechselassistent/ Totwinkelassistent"
         );
-        questions.add(new RendomQuestionModel("Mit welchen Fahrerassistenzsystemen haben Sie bereits Erfahrung?", options1, 7));
+        questions.add(new RendomQuestionModel("Mit welchen Fahrerassistenzsystemen haben Sie bereits Erfahrung?", options1, 8));
 
         // Question 2
         List<String> options2 = Arrays.asList("sehr negativ", "eher negativ", "neutral", "eher positiv", "sehr positiv");
-        questions.add(new RendomQuestionModel("Wie waren Ihre bisherigen Erfahrungen mit Fahrerassistenzsystemen im Allgemeinen?", options2, 7));
+        questions.add(new RendomQuestionModel("Wie waren Ihre bisherigen Erfahrungen mit Fahrerassistenzsystemen im Allgemeinen?", options2, 8));
 
 
         return questions;
@@ -176,11 +195,11 @@ public class VorabfragebogenActivity extends AppCompatActivity {
 
         // Question 3
         List<String> options3 = Arrays.asList("seltene Nutzung", "häufige Nutzung", "ständige/tägliche Nutzung");
-        questions.add(new RendomQuestionModel("Wie oft haben Sie einen Spurhalteassistenten in der Vergangenheit benutzt?", options3, 7));
+        questions.add(new RendomQuestionModel("Wie oft haben Sie einen Spurhalteassistenten in der Vergangenheit benutzt?", options3, 8));
 
         // Question 4
         List<String> options4 = Arrays.asList("sehr negativ", "eher negativ", "neutral", "eher positiv", "sehr positiv");
-        questions.add(new RendomQuestionModel("Wie waren Ihre bisherigen Erfahrungen mit einem Spurhalteassistenten?", options4, 7));
+        questions.add(new RendomQuestionModel("Wie waren Ihre bisherigen Erfahrungen mit einem Spurhalteassistenten?", options4, 8));
 
 
         return questions;
@@ -191,15 +210,37 @@ public class VorabfragebogenActivity extends AppCompatActivity {
 
         // Question 1
         List<String> options1 = Arrays.asList("Stimme überhaupt nicht zu", "stimme voll und ganz  zu");
-        questions.add(new RendomQuestionModel("Ein idealer Spurhalteassistent greift stark in die Fahrzeugführung ein.", options1, 7));
+        questions.add(new RendomQuestionModel("Ein idealer Spurhalteassistent greift stark in die Fahrzeugführung ein.", options1, 8));
 
         // Question 3
         List<String> options3 = Arrays.asList("Stimme überhaupt nicht zu", "stimme voll und ganz  zu");
-        questions.add(new RendomQuestionModel("Ein idealer Spurhalteassistent trägt für mich zur Freude am Autofahren bei.", options3, 7));
+        questions.add(new RendomQuestionModel("Ein idealer Spurhalteassistent trägt für mich zur Freude am Autofahren bei.", options3, 8));
 
         // Question 4
         List<String> options4 = Arrays.asList("Stimme überhaupt nicht zu", "stimme voll und ganz  zu");
-        questions.add(new RendomQuestionModel("Ein idealer Spurhalteassistent trägt für mich zur Erhöhung der Fahrsicherheit bei.", options4, 7));
+        questions.add(new RendomQuestionModel("Ein idealer Spurhalteassistent trägt für mich zur Erhöhung der Fahrsicherheit bei.", options4, 8));
+
+
+        return questions;
+    }
+
+    private List<RendomQuestionModel> generateForthDynamicQuestionList() {
+        List<RendomQuestionModel> questions = new ArrayList<>();
+        // Question 1
+        List<String> options1 = Arrays.asList("öfter", "3-5x pro Woche", "1-2x pro Woche", "seltener");
+        questions.add(new RendomQuestionModel("Wie oft fahren Sie im Schnitt mit dem Auto?", options1, 8));
+
+        // Question 3
+        List<String> options3 = Arrays.asList("<5000", "5.000-10.000", "10.000-20.000", ">20.000");
+        questions.add(new RendomQuestionModel("Wie schätzen Sie Ihre jährliche Fahrleistung ein? (in km/Jahr)", options3, 8));
+
+        // Question 4
+        List<String> options4 = Arrays.asList("Nein", "Ja, im Fahrsimulator", "Ja, im Realfahrzeug");
+        questions.add(new RendomQuestionModel("Haben Sie bereits an einem Fahrversuch zum Thema „automatisiertes Fahren“/ „Fahrerassistenzsysteme“ teilgenommen? Wenn ja, wo fand dieser statt?", options4, 8));
+        List<String> options5 = Arrays.asList("überhaupt nicht", "sehr schnell");
+        questions.add(new RendomQuestionModel("Tendieren Sie dazu, schnell reisekrank zu werden?", options5, 8));
+        List<String> options6 = Arrays.asList("weiblich", "männlich", "nicht binär");
+        questions.add(new RendomQuestionModel("Geschlecht", options6, 8));
 
 
         return questions;
@@ -210,7 +251,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
                 .child("Vorabfragebogen").child(Stash.getString("device_id"));
 
         for (RendomQuestionModel question : adapter1.getQuestions()) {
-            if (question.getSelectedOptionIndex() == 7) {
+            if (question.getSelectedOptionIndex() == 8) {
                 Log.d("Validation", "Question not answered: " + question.getQuestionText());
                 return false;
             }
@@ -226,7 +267,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         }
 
         for (RendomQuestionModel question2 : adapter2.getQuestions()) {
-            if (question2.getSelectedOptionIndex() == 7) {
+            if (question2.getSelectedOptionIndex() == 8) {
                 Log.d("Validation", "Question not answered: " + question2.getQuestionText());
                 return false;
             }
@@ -243,7 +284,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
 
         for (RendomQuestionModel question3 : adapter3.getQuestions()) {
 
-            if (question3.getSelectedOptionIndex() == 7) {
+            if (question3.getSelectedOptionIndex() == 8) {
                 Log.d("Validation", "Question not answered: " + question3.getQuestionText());
                 return false;
             }
@@ -259,7 +300,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         }
 
         for (RendomQuestionModel question4 : adapter4.getQuestions()) {
-            if (question4.getSelectedOptionIndex() == 7) {
+            if (question4.getSelectedOptionIndex() == 8) {
                 Log.d("Validation", "Question not answered: " + question4.getQuestionText());
                 return false;
             }
@@ -273,6 +314,23 @@ public class VorabfragebogenActivity extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                     .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
         }
+
+        for (RendomQuestionModel question5 : adapter5.getQuestions()) {
+            if (question5.getSelectedOptionIndex() == 8) {
+                Log.d("Validation", "Question not answered: " + question5.getQuestionText());
+                return false;
+            }
+
+            Map<String, Object> questionData5 = new HashMap<>();
+            questionData5.put("questionText", question5.getQuestionText());
+            questionData5.put("selectedOptionText", question5.getOptions().get(question5.getSelectedOptionIndex()));
+
+            // Add the data to Realtime Database
+            databaseReference.push().setValue(questionData5)
+                    .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
+
         Map<String, Object> questionData4 = new HashMap<>();
         questionData4.put("comments", editTextComments.getText().toString());
 

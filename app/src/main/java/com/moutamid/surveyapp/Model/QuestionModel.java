@@ -1,18 +1,15 @@
 package com.moutamid.surveyapp.Model;
 import java.util.List;
 
-
-import java.util.List;
-
 public class QuestionModel {
     private String questionText;
     private List<String> options;
-    private int selectedOptionIndex = -1;
+    private int selectedOptionIndex = -1; // Default value indicating no option selected
+    private String userInput;
 
-    public QuestionModel(String questionText, List<String> options, int selectedOptionIndex) {
+    public QuestionModel(String questionText, List<String> options) {
         this.questionText = questionText;
         this.options = options;
-        this.selectedOptionIndex = selectedOptionIndex;
     }
 
     public String getQuestionText() {
@@ -27,8 +24,15 @@ public class QuestionModel {
         return selectedOptionIndex;
     }
 
-    // Add this setter method
     public void setSelectedOptionIndex(int selectedOptionIndex) {
         this.selectedOptionIndex = selectedOptionIndex;
+    }
+
+    public String getUserInput() {
+        return userInput;
+    }
+
+    public void setUserInput(String userInput) {
+        this.userInput = userInput;
     }
 }

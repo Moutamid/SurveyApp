@@ -16,7 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.moutamid.surveyapp.Adapter.AbschlussfragebogenQuestionAdapter;
 import com.moutamid.surveyapp.Adapter.BewetungDerFahrtQuestionAdapter;
-import com.moutamid.surveyapp.Model.QuestionModel;
 import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;

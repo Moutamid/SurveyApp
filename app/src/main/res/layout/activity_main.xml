@@ -162,6 +162,23 @@ android:padding="10dp"
             android:layout_height="wrap_content"
             android:padding="16dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="Allgemeine Fragen"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp" />
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/submitButton"
