@@ -1,5 +1,6 @@
 package com.moutamid.surveyapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,21 +36,20 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
     private RecyclerView recyclerView1;
     private RecyclerView recyclerView2;
 
-    EditText editTextComments;
+    EditText editTextKommentare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_abschlussfragebogen);
 
-        editTextComments = findViewById(R.id.editTextComments);
+        editTextKommentare = findViewById(R.id.editTextKommentare);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView1 = findViewById(R.id.recyclerView1);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
         recyclerView2 = findViewById(R.id.recyclerView2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
-
 
         List<RendomQuestionModel> questionList = generateQuestionList();
         adapter1 = new AbschlussfragebogenQuestionAdapter(questionList); // Pass the selectedAnswers list
@@ -68,9 +68,10 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please select all questions", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(AbschlussfragebogenActivity.this, BewertungDerFahrtActivity.class);
+                    startActivity(intent);
+                    finish();                } else {
+                    Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -113,8 +114,8 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
         questions.add(new RendomQuestionModel("Wie hoch ist Ihr Vertrauen in das System nach der eben erlebten Fahrt?", options4, 7));
 
 
-//        for (String questionText : questions) {
-//            questions.add(new RendomQuestionModel(questionText, options, 7));
+//        for (String Fragetext : questions) {
+//            questions.add(new RendomQuestionModel(Fragetext, options, 7));
 //        }
         // Add other questions
         return questions;
@@ -229,61 +230,64 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
 
     private boolean validateAllQuestions1() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses")
-                .child("Abschlussfragebogen").child(Stash.getString("device_id"));
-
+                .child("Abschlussfragebogen");
+        String key =  databaseReference.push().getKey();
         for (RendomQuestionModel question : adapter1.getQuestions()) {
             if (question.getSelectedOptionIndex() == 7) {
-                Log.d("Validation", "Question not answered: " + question.getQuestionText());
+                Log.d("Validation", "Question not answered: " + question.getFragetext());
                 return false;
             }
 
             Map<String, Object> questionData = new HashMap<>();
-            questionData.put("questionText", question.getQuestionText());
-            questionData.put("selectedOptionText", question.getOptions().get(question.getSelectedOptionIndex()));
+            questionData.put("Fragetext", question.getFragetext());
+            questionData.put("AusgewählterOptionstext", question.getOptions().get(question.getSelectedOptionIndex()));
 
             // Add the data to Realtime Database
-            databaseReference.push().setValue(questionData)
+            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData)
                     .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                     .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
         }
 
         for (RendomQuestionModel question2 : adapter2.getQuestions()) {
             if (question2.getSelectedOptionIndex() == 7) {
-                Log.d("Validation", "Question not answered: " + question2.getQuestionText());
+                Log.d("Validation", "Question not answered: " + question2.getFragetext());
                 return false;
             }
 
             Map<String, Object> questionData2 = new HashMap<>();
-            questionData2.put("questionText", question2.getQuestionText());
-            questionData2.put("selectedOptionText", question2.getOptions().get(question2.getSelectedOptionIndex()));
+            questionData2.put("Fragetext", question2.getFragetext());
+            questionData2.put("AusgewählterOptionstext", question2.getOptions().get(question2.getSelectedOptionIndex()));
 
             // Add the data to Realtime Database
-            databaseReference.push().setValue(questionData2)
+           
+            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData2)
                     .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                     .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
         }
 
         for (RendomQuestionModel question3 : adapter3.getQuestions()) {
             if (question3.getSelectedOptionIndex() == 7) {
-                Log.d("Validation", "Question not answered: " + question3.getQuestionText());
+                Log.d("Validation", "Question not answered: " + question3.getFragetext());
                 return false;
             }
 
             Map<String, Object> questionData3 = new HashMap<>();
-            questionData3.put("questionText", question3.getQuestionText());
-            questionData3.put("selectedOptionText", question3.getOptions().get(question3.getSelectedOptionIndex()));
+            questionData3.put("Fragetext", question3.getFragetext());
+            questionData3.put("AusgewählterOptionstext", question3.getOptions().get(question3.getSelectedOptionIndex()));
 
             // Add the data to Realtime Database
-            databaseReference.push().setValue(questionData3)
+           
+            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData3)
                     .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                     .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
         }
 
         Map<String, Object> questionData4 = new HashMap<>();
-        questionData4.put("comments", editTextComments.getText().toString());
+        questionData4.put("Kommentare", editTextKommentare.getText().toString());
 
         // Add the data to Realtime Database
-        databaseReference.push().setValue(questionData4)
+       
+            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData4)
                 .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                 .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
 

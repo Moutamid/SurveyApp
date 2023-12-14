@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.List;
 
 public class RendomQuestionModel {
-    private String questionText;
+    private String Fragetext;
     private List<String> options;
     private int selectedOptionIndex = -1;
 
-    public RendomQuestionModel(String questionText, List<String> options, int selectedOptionIndex) {
-        this.questionText = questionText;
+    public RendomQuestionModel(String Fragetext, List<String> options, int selectedOptionIndex) {
+        this.Fragetext = Fragetext;
         this.options = options;
         this.selectedOptionIndex = selectedOptionIndex;
     }
 
-    public String getQuestionText() {
-        return questionText;
+    public String getFragetext() {
+        return Fragetext;
     }
 
     public List<String> getOptions() {

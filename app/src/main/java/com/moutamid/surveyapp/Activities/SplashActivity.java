@@ -37,13 +37,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void goToApp() {
-        if (!Stash.getString("name").toString().isEmpty()) {
-            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-            finish();
-        } else {
+
             startActivity(new Intent(SplashActivity.this, ProfileActivity.class));
             finish();
-        }
+
     }
 
 

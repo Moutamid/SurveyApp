@@ -24,7 +24,8 @@
             android:gravity="left"
             android:text="Vorabfragebogen"
             android:textColor="@color/black"
-            android:textSize="22sp" />        <TextView
+            android:textSize="22sp" />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -113,7 +114,7 @@
             android:textSize="14sp" />
 
         <EditText
-            android:id="@+id/editTextComments"
+            android:id="@+id/editTextKommentare"
             android:layout_width="match_parent"
 
             android:layout_height="90dp"
@@ -191,7 +192,7 @@ android:padding="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/card_bg"
             android:backgroundTint="#C5123E"
-            android:text="Submit Answers"
+            android:text="Einreichen Sie Antworten"
             android:textAllCaps="false"
             android:textColor="@color/white" />
 

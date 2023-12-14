@@ -2,18 +2,18 @@ package com.moutamid.surveyapp.Model;
 import java.util.List;
 
 public class QuestionModel {
-    private String questionText;
+    private String Fragetext;
     private List<String> options;
     private int selectedOptionIndex = -1; // Default value indicating no option selected
     private String userInput;
 
-    public QuestionModel(String questionText, List<String> options) {
-        this.questionText = questionText;
+    public QuestionModel(String Fragetext, List<String> options) {
+        this.Fragetext = Fragetext;
         this.options = options;
     }
 
-    public String getQuestionText() {
-        return questionText;
+    public String getFragetext() {
+        return Fragetext;
     }
 
     public List<String> getOptions() {

@@ -33,7 +33,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         QuestionModel question = questionList.get(position);
 
-        holder.questionTextView.setText(question.getQuestionText());
+        holder.FragetextView.setText(question.getFragetext());
 
         if (question.getOptions() != null && !question.getOptions().isEmpty()) {
             holder.radioGroup.setVisibility(View.VISIBLE);
@@ -74,13 +74,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView questionTextView;
+        private TextView FragetextView;
         private RadioGroup radioGroup;
         private EditText editText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            questionTextView = itemView.findViewById(R.id.textQuestion);
+            FragetextView = itemView.findViewById(R.id.textQuestion);
             radioGroup = itemView.findViewById(R.id.radioGroupOptions);
             editText = itemView.findViewById(R.id.editTextAnswer);
         }

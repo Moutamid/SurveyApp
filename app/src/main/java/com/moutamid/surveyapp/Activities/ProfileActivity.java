@@ -27,13 +27,13 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (edt_name.getText().toString().isEmpty()) {
-                    edt_name.setError("Please enter you name");
+                    edt_name.setError("Bitte geben Sie Ihren Namen ein.");
                 }
                 else
                 {
                     Stash.put("name", edt_name.getText().toString());
                     String mId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                    Stash.put("device_id", mId + "___" + edt_name.getText().toString());
+                    Stash.put("device_id", mId);
                     startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
                     finish();
                 }

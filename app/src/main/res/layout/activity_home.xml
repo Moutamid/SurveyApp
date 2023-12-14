@@ -14,6 +14,32 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/logo" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="left"
+        android:text="Vorabfragebogen"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Vielen Dank, dass Sie sich die Zeit nehmen, an dieser Studie teilzunehmen. Vorab würden wir Sie bitten, einige Fragen zu Ihrer Person zu beantworten.Diese beziehen sich auf Ihren eigenen Fahrstil, Ihre technische Affinität, Ihre bisherigen Erfahrungen zu Fahrerassistenzsystemensowie allgemeine Fragen.Kreuzen Sie bitte immer eine Antwort an, auch wenn Sie bei einer Einschätzung unsicher sind. Es gibt keine „richtige“ oder „falsche“ Antwort. Ihre persönliche Meinung zählt!"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/vorabfragebogen"
         android:layout_width="match_parent"
@@ -23,46 +49,11 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/card_bg"
         android:backgroundTint="#C5123E"
-        android:text="Vorabfragebogen"
+        android:text="Beginnen Sie mit Vorabfragebogen"
 
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/abschlussfragebogen"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:fontFamily="@font/poppins_bold"
-
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/card_bg"
-        android:backgroundTint="#C5123E"
-        android:text="Abschlusfragebogen"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
-
-
-
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bewertung_der_fahrt"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:fontFamily="@font/poppins_bold"
-
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/card_bg"
-        android:backgroundTint="#C5123E"
-        android:text="Bewertung der Fahrt"
         android:textAllCaps="false"
         android:textColor="@color/white" />
 

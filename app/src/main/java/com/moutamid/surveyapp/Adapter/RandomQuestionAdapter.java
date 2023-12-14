@@ -33,7 +33,7 @@ public class RandomQuestionAdapter extends RecyclerView.Adapter<RandomQuestionAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RendomQuestionModel question = questions.get(position);
 
-        holder.questionText.setText(question.getQuestionText());
+        holder.Fragetext.setText(question.getFragetext());
 
         // Set options using radio buttons
         holder.optionsRadioGroup.removeAllViews();
@@ -66,12 +66,12 @@ public class RandomQuestionAdapter extends RecyclerView.Adapter<RandomQuestionAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView questionText;
+        TextView Fragetext;
         RadioGroup optionsRadioGroup;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            questionText = itemView.findViewById(R.id.questionText);
+            Fragetext = itemView.findViewById(R.id.Fragetext);
             optionsRadioGroup = itemView.findViewById(R.id.optionsRadioGroup);
         }
     }

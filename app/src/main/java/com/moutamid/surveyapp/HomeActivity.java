@@ -13,23 +13,15 @@ import com.moutamid.surveyapp.Activities.VorabfragebogenActivity;
 import com.moutamid.surveyapp.helper.Config;
 
 public class HomeActivity extends AppCompatActivity {
-    Button vorabfragebogen, abschlussfragebogen, bewertung_der_fahrt;
+    Button vorabfragebogen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Config.checkApp(HomeActivity.this);
-        bewertung_der_fahrt = findViewById(R.id.bewertung_der_fahrt);
-        abschlussfragebogen = findViewById(R.id.abschlussfragebogen);
-        vorabfragebogen = findViewById(R.id.vorabfragebogen);
-        bewertung_der_fahrt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent= new Intent(HomeActivity.this, BewertungDerFahrtActivity.class);
-                startActivity(intent);
-            }
-        });
+         vorabfragebogen = findViewById(R.id.vorabfragebogen);
+
         vorabfragebogen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,12 +29,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        abschlussfragebogen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, AbschlussfragebogenActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 }

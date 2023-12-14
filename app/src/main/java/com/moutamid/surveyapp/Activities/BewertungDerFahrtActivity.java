@@ -1,9 +1,5 @@
 package com.moutamid.surveyapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,14 +7,18 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.fxn.stash.Stash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.moutamid.surveyapp.Adapter.AbschlussfragebogenQuestionAdapter;
 import com.moutamid.surveyapp.Adapter.BewetungDerFahrtQuestionAdapter;
 import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
+import com.moutamid.surveyapp.helper.CompleteDialogClass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,10 +47,11 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions()) {
-                  finish();
+                    CompleteDialogClass cdd = new CompleteDialogClass(BewertungDerFahrtActivity.this);
+                    cdd.show();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Please select all questions", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -166,22 +167,23 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
 
 
     private boolean validateAllQuestions() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses").child("BewertungDerFahrt").child(Stash.getString("device_id"));
-
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses").child("BewertungDerFahrt");
+        String key =databaseReference.push().getKey();
         for (RendomQuestionModel question : adapter.getQuestions()) {
             if (question.getSelectedOptionIndex() == 7) {
-                Log.d("Validation", "Question not answered: " + question.getQuestionText());
+                Log.d("Validation", "Question not answered: " + question.getFragetext());
                 return false;
             } else {
                 Log.d("Validation", "Question answered - Selected option index: " + question.getSelectedOptionIndex());
 
                 // Create a map to represent the data you want to store in Realtime Database
                 Map<String, Object> questionData = new HashMap<>();
-                questionData.put("questionText", question.getQuestionText());
-                questionData.put("selectedOptionText", question.getOptions().get(question.getSelectedOptionIndex()));
+                questionData.put("Fragetext", question.getFragetext());
+                questionData.put("AusgewählterOptionstext", question.getOptions().get(question.getSelectedOptionIndex()));
 
                 // Add the data to Realtime Database
-                databaseReference.push().setValue(questionData)
+               
+            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData)
                         .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                         .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
             }
