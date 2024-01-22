@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.moutamid.surveyapp.Activities.ProfileActivity;
+import com.moutamid.surveyapp.HomeActivity;
 import com.moutamid.surveyapp.R;
 
 public class CompleteDialogClass extends Dialog {
@@ -29,10 +30,19 @@ public class CompleteDialogClass extends Dialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setContentView(R.layout.welcome_dailogue);
         Button welcome = findViewById(R.id.welcome);
+        Button finnall = findViewById(R.id.finnall);
+
         welcome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 c.startActivity(new Intent(c, ProfileActivity.class));
+                c.finishAffinity();
+            }
+        });
+        finnall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                c.startActivity(new Intent(c, HomeActivity.class));
                 c.finishAffinity();
             }
         });

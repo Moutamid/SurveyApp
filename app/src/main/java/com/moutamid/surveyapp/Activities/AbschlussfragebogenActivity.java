@@ -1,6 +1,5 @@
 package com.moutamid.surveyapp.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.moutamid.surveyapp.Adapter.AbschlussfragebogenQuestionAdapter;
 import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
+import com.moutamid.surveyapp.helper.CompleteDialogClass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,9 +68,9 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    Intent intent = new Intent(AbschlussfragebogenActivity.this, BewertungDerFahrtActivity.class);
-                    startActivity(intent);
-                    finish();                } else {
+                    CompleteDialogClass cdd = new CompleteDialogClass(AbschlussfragebogenActivity.this);
+                    cdd.show();
+                } else {
                     Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
                 }
             }

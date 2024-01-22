@@ -94,7 +94,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    Intent intent = new Intent(VorabfragebogenActivity.this, AbschlussfragebogenActivity.class);
+                    Intent intent = new Intent(VorabfragebogenActivity.this, BewertungDerFahrtActivity.class);
                     startActivity(intent);
                 finish();}
                 else {

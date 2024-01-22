@@ -54,6 +54,20 @@
                 android:text="Beenden"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/finnall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/card_bg"
+               android:backgroundTint="@color/app_color"
+                android:fontFamily="@font/poppins_regular"
+                android:text="möchte noch einmal antworten"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

@@ -3,21 +3,16 @@ package com.moutamid.surveyapp.Activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.fxn.stash.Stash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.moutamid.surveyapp.Adapter.BewetungDerFahrtQuestionAdapter;
-import com.moutamid.surveyapp.Model.RendomQuestionModel;
-import com.moutamid.surveyapp.Model.SelectedAnswerModel;
+import com.moutamid.surveyapp.Model.RendomQuestionModelSlider;
 import com.moutamid.surveyapp.R;
+import com.moutamid.surveyapp.helper.BewetungDerFahrtQuestionAdapter;
 import com.moutamid.surveyapp.helper.CompleteDialogClass;
 
 import java.util.ArrayList;
@@ -27,42 +22,81 @@ import java.util.List;
 import java.util.Map;
 
 public class BewertungDerFahrtActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private BewetungDerFahrtQuestionAdapter adapter;
-    private List<SelectedAnswerModel> selectedAnswers = new ArrayList<>();
 
+    private ViewPager viewPager;
+    private BewetungDerFahrtQuestionAdapter adapter;
+    private List<RendomQuestionModelSlider> selectedAnswers = new ArrayList<>();
+    int page_position = 0;
+    DatabaseReference databaseReference;
+    String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bewertung_der_fahrt);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<RendomQuestionModel> questionList = generateDynamicQuestionList();
-        adapter = new BewetungDerFahrtQuestionAdapter(questionList); // Pass the selectedAnswers list
-        recyclerView.setAdapter(adapter);
-        Button submitButton = findViewById(R.id.submitButton);
-        submitButton.setOnClickListener(new View.OnClickListener() {
+
+        viewPager = findViewById(R.id.viewPager);
+        List<RendomQuestionModelSlider> questionList = generateDynamicQuestionList();
+        adapter = new BewetungDerFahrtQuestionAdapter(questionList, this);
+        viewPager.setAdapter(adapter);
+        databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses").child("BewertungDerFahrt");
+        key = databaseReference.push().getKey();
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                Log.d("ButtonClicked", "Submit button clicked");
-                if (validateAllQuestions()) {
-                    CompleteDialogClass cdd = new CompleteDialogClass(BewertungDerFahrtActivity.this);
-                    cdd.show();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (page_position < position) {
+                    page_position = position;
+                    validateAllQuestions();
                 }
-                else {
-                    Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
+                if (position == 6) {
+                    findViewById(R.id.submitButton).setVisibility(View.VISIBLE);
                 }
             }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+
+            }
         });
-
-
+        findViewById(R.id.submitButton).setOnClickListener(view -> submitButtonClick());
     }
 
-    private List<RendomQuestionModel> generateDynamicQuestionList() {
-        List<RendomQuestionModel> questions = new ArrayList<>();
+    private void submitButtonClick() {
 
-        // Question 1
+        CompleteDialogClass cdd = new CompleteDialogClass(BewertungDerFahrtActivity.this);
+        cdd.show();
+    }
+
+
+    private boolean validateAllQuestions() {
+
+//        for (RendomQuestionModelSlider question : adapter.getQuestions()) {
+//            float sliderValue = question.getSliderValue();
+
+        Map<String, Object> questionData = new HashMap<>();
+        questionData.put("Fragetext", BewetungDerFahrtQuestionAdapter.question_main);
+        questionData.put("AusgewählterOptionstext", BewetungDerFahrtQuestionAdapter.progress_main + "");
+
+        databaseReference.child(Stash.getString("device_id") + key + "___" + Stash.getString("name")).push().setValue(questionData)
+                .addOnSuccessListener(aVoid ->
+
+                        BewetungDerFahrtQuestionAdapter.progress_main = 0)
+                .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+//            }
+
+
+        return true;
+    }
+
+    private List<RendomQuestionModelSlider> generateDynamicQuestionList() {
+        List<RendomQuestionModelSlider> questions = new ArrayList<>();
+
         List<String> options1 = Arrays.asList(
                 "sehr negativ",
                 "negativ",
@@ -70,9 +104,8 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
                 "positiv",
                 "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie hat das System Ihren subjektiv empfundenen Fahrkomfort verändert?", options1, 7));
+        questions.add(new RendomQuestionModelSlider("Wie hat das System Ihren subjektiv empfundenen Fahrkomfort verändert?", options1, 0, -1.0f));
 
-        // Question 2
         List<String> options2 = Arrays.asList(
                 "sehr negativ",
                 "negativ",
@@ -80,122 +113,50 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
                 "positiv",
                 "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie hat das System insgesamt/ bei Gegenverkehr Ihre subjektiv empfundene Fahrsicherheit verändert?", options2, 7));
-
-        // Question 3
+        questions.add(new RendomQuestionModelSlider("Wie hat das System insgesamt/ bei Gegenverkehr Ihre subjektiv empfundene Fahrsicherheit verändert?", options2, 0, -1.0f));
         List<String> options3 = Arrays.asList(
-                "ungenügend",
-                "ausreichend",
-                "befriedigend",
-                "gut",
-                "sehr gut"
+                "sehr negativ",
+                "negativ",
+                "keinen Einfluss",
+                "positiv",
+                "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie bewerten Sie die Unterstützung beim Einhalten der Fahrspur in der Kurve/ während der Geradeausfahrt?", options3, 7));
-
-        // Question 4
+        questions.add(new RendomQuestionModelSlider("Wie bewerten Sie die Unterstützung beim Einhalten der Fahrspurin der Kurve/ während der Geradeausfahrt?", options3, 0, -1.0f));
         List<String> options4 = Arrays.asList(
-                "zu schwach",
-                "schwach",
-                "angemessen",
-                "stark",
-                "zu stark"
+                "sehr negativ",
+                "negativ",
+                "keinen Einfluss",
+                "positiv",
+                "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie bewerten Sie die Intensität der Lenkeingriffe?", options4, 7));
-
-        // Question 5
+        questions.add(new RendomQuestionModelSlider("Wie bewerten Sie die Intensität der Lenkeingriffe?", options4, 0, -1.0f));
         List<String> options5 = Arrays.asList(
-                "ungenügend",
-                "ausreichend",
-                "befriedigend",
-                "gut",
-                "sehr gut"
+                "sehr negativ",
+                "negativ",
+                "keinen Einfluss",
+                "positiv",
+                "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie gut konnten Sie die Lenkeingriffe des Systems vorhersehen?", options5, 7));
-
-        // Question 6
+        questions.add(new RendomQuestionModelSlider("Wie gut konnten Sie die Lenkeingriffe des Systems vorhersehen?", options5, 0, -1.0f));
         List<String> options6 = Arrays.asList(
-                "sehr klein",
-                "klein",
-                "weder noch",
-                "groß",
-                "sehr groß"
+                "sehr negativ",
+                "negativ",
+                "keinen Einfluss",
+                "positiv",
+                "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie bewerten Sie Ihren manuellen Korrekturaufwand nach den Eingriffen des Systems?", options6, 7));
-
-        // Question 7
+        questions.add(new RendomQuestionModelSlider("Wie bewerten Sie Ihren manuellen Korrekturaufwand nach den Eingriffen des Systems?", options6, 0, -1.0f));
         List<String> options7 = Arrays.asList(
-                "sehr störend",
-                "störend",
-                "neutral",
-                "hilfreich",
-                "sehr hilfreich"
+                "sehr negativ",
+                "negativ",
+                "keinen Einfluss",
+                "positiv",
+                "sehr positiv"
         );
-        questions.add(new RendomQuestionModel("Wie bewerten Sie die Unterstützung bei der Fahrzeugführung insgesamt?", options7, 7));
+        questions.add(new RendomQuestionModelSlider("Wie bewerten Sie die Unterstützung bei der Fahrzeugführung insgesamt?", options7, 0, -1.0f));
 
-        // Question 8
-        List<String> options8 = Arrays.asList(
-                "viel schlechter",
-                "schlechter",
-                "gleich",
-                "besser",
-                "viel besser"
-        );
-        questions.add(new RendomQuestionModel("Wie bewerten Sie das Fahrzeugverhalten im Vergleich zum vorherigen System?", options8, 7));
+        // Add more questions as needed...
 
         return questions;
     }
-
-
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-        int questionPosition = (int) view.getTag(); // Retrieve the question position from the tag
-
-        // Handle radio button click here
-        if (view.getId() == R.id.radioButtonOption1 && checked) {
-            selectedAnswers.add(new SelectedAnswerModel(questionPosition, 0));
-        } else if (view.getId() == R.id.radioButtonOption2 && checked) {
-            selectedAnswers.add(new SelectedAnswerModel(questionPosition, 1));
-        } else if (view.getId() == R.id.radioButtonOption3 && checked) {
-            selectedAnswers.add(new SelectedAnswerModel(questionPosition, 2));
-        } else if (view.getId() == R.id.radioButtonOption4 && checked) {
-            selectedAnswers.add(new SelectedAnswerModel(questionPosition, 3));
-        } else if (view.getId() == R.id.radioButtonOption5 && checked) {
-            selectedAnswers.add(new SelectedAnswerModel(questionPosition, 4));
-        }
-    }
-
-
-
-    private boolean validateAllQuestions() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses").child("BewertungDerFahrt");
-        String key =databaseReference.push().getKey();
-        for (RendomQuestionModel question : adapter.getQuestions()) {
-            if (question.getSelectedOptionIndex() == 7) {
-                Log.d("Validation", "Question not answered: " + question.getFragetext());
-                return false;
-            } else {
-                Log.d("Validation", "Question answered - Selected option index: " + question.getSelectedOptionIndex());
-
-                // Create a map to represent the data you want to store in Realtime Database
-                Map<String, Object> questionData = new HashMap<>();
-                questionData.put("Fragetext", question.getFragetext());
-                questionData.put("AusgewählterOptionstext", question.getOptions().get(question.getSelectedOptionIndex()));
-
-                // Add the data to Realtime Database
-               
-            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData)
-                        .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
-                        .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
-            }
-        }
-        // All questions are answered
-        return true;
-    }
-
-
 }
-
-
-
-
-
