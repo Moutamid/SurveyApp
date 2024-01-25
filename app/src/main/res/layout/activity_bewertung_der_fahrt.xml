@@ -22,7 +22,7 @@
         android:textColor="@android:color/black"
         android:textSize="20sp" />
 
-    <androidx.viewpager.widget.ViewPager
+    <com.moutamid.surveyapp.helper.NonSwipeableViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,6 +39,6 @@
         android:backgroundTint="@color/app_color"
         android:text="Submit"
         android:textColor="@color/white"
-        android:visibility="gone" />
+       />
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.moutamid.surveyapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.moutamid.surveyapp.Model.RendomQuestionModelSlider;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.BewetungDerFahrtQuestionAdapter;
 import com.moutamid.surveyapp.helper.CompleteDialogClass;
+import com.moutamid.surveyapp.helper.NonSwipeableViewPager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ import java.util.Map;
 
 public class BewertungDerFahrtActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
+    private NonSwipeableViewPager viewPager;
     private BewetungDerFahrtQuestionAdapter adapter;
     private List<RendomQuestionModelSlider> selectedAnswers = new ArrayList<>();
     int page_position = 0;
@@ -41,6 +43,7 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance().getReference("SurveyResponses").child("BewertungDerFahrt");
         key = databaseReference.push().getKey();
+        viewPager.setActivated(false);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -49,28 +52,37 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (page_position < position) {
-                    page_position = position;
-                    validateAllQuestions();
-                }
-                if (position == 6) {
-                    findViewById(R.id.submitButton).setVisibility(View.VISIBLE);
-                }
+                page_position = position;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
-
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    validateAllQuestions();
+                }
             }
-        });
-        findViewById(R.id.submitButton).setOnClickListener(view -> submitButtonClick());
-    }
+        });        findViewById(R.id.submitButton).setOnClickListener(view -> {
+            if (page_position == adapter.getCount() - 1) {
+                // Last question, save data and move to another screen
+                saveDataAndMoveToNextScreen();
+            } else {
+                // Not the last question, move to the next question
+                viewPager.setCurrentItem(page_position + 1);
+            }
+        });    }
 
-    private void submitButtonClick() {
+    private void saveDataAndMoveToNextScreen() {
+        Map<String, Object> questionData = new HashMap<>();
+        questionData.put("Fragetext", BewetungDerFahrtQuestionAdapter.question_main);
+        questionData.put("AusgewählterOptionstext", BewetungDerFahrtQuestionAdapter.progress_main + "");
 
-        CompleteDialogClass cdd = new CompleteDialogClass(BewertungDerFahrtActivity.this);
-        cdd.show();
+        databaseReference.child(Stash.getString("device_id") + key + "___" + Stash.getString("name")).push().setValue(questionData)
+                .addOnSuccessListener(aVoid -> {
+                    BewetungDerFahrtQuestionAdapter.progress_main = 0;
+                    startActivity(new Intent(BewertungDerFahrtActivity.this, AbschlussfragebogenActivity.class));
+                    finish();
+                })
+                .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
     }
 
 
