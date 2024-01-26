@@ -15,6 +15,7 @@ import com.moutamid.surveyapp.Model.RendomQuestionModelSlider;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.BewetungDerFahrtQuestionAdapter;
 import com.moutamid.surveyapp.helper.CompleteDialogClass;
+import com.moutamid.surveyapp.helper.CompleteQuizDialogClass;
 import com.moutamid.surveyapp.helper.NonSwipeableViewPager;
 
 import java.util.ArrayList;
@@ -79,9 +80,9 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         databaseReference.child(Stash.getString("device_id") + key + "___" + Stash.getString("name")).push().setValue(questionData)
                 .addOnSuccessListener(aVoid -> {
                     BewetungDerFahrtQuestionAdapter.progress_main = 0;
-                    startActivity(new Intent(BewertungDerFahrtActivity.this, AbschlussfragebogenActivity.class));
-                    finish();
-                })
+                    CompleteQuizDialogClass cdd = new CompleteQuizDialogClass(BewertungDerFahrtActivity.this);
+                    cdd.show();
+                 })
                 .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
     }
 

@@ -67,6 +67,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:text="möchte noch einmal antworten"
                 android:textAllCaps="false"
+                android:visibility="gone"
                 android:textColor="@color/white" />
 
         </LinearLayout>
