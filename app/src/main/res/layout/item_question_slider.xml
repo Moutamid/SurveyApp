@@ -31,7 +31,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginRight="15dp"
             android:max="4"
-            android:paddingBottom="16dp"
+            android:paddingBottom="26dp"
             android:layout_marginBottom="10dp"/> <!-- Set the max value based on the number of options -->
 
     </LinearLayout>

@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Stash.put("name", edt_name.getText().toString());
                     String mId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                     Stash.put("device_id", mId);
-                    startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+                    startActivity(new Intent(ProfileActivity.this, MainOptionActivity.class));
                     finish();
                 }
             }

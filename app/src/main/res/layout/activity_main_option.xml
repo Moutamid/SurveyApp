@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".HomeActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="-50dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logo" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/vorabfragebogen"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Varabfragebogen"
+
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/abschlusfragebogen"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:onClick="absc"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Abschlusfragebogen"        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bwewrtung"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Bwewrtung der Fahrt"
+
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+</LinearLayout>

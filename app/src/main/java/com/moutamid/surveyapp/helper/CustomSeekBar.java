@@ -48,7 +48,7 @@ public class CustomSeekBar extends AppCompatSeekBar {
         float height = getHeight();
 
         textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        textPaint.setTextSize(40);
+        textPaint.setTextSize(45);
         textPaint.getTextBounds(text, 0, text.length(), textBounds);
 
         float position = (width / getMax()) * getProgress();

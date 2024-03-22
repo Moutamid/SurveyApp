@@ -21,6 +21,9 @@ import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.CompleteDialogClass;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -291,10 +294,37 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                 .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
 
-        // All questions are answered
+        saveDataToCSV(adapter1.getQuestions());
+        saveDataToCSV(adapter2.getQuestions());
+        saveDataToCSV(adapter3.getQuestions());
         return true;
     }
 
 
+    private void saveDataToCSV(List<RendomQuestionModel> questions) {
+        String filename = "survey_data.csv";
+        String csvHeader = "Fragetext,AusgewählterOptionstext\n";
+
+        File csvFile = new File(getExternalFilesDir(null), filename);
+
+        try {
+
+            FileWriter writer = new FileWriter(csvFile);
+            writer.append(csvHeader);
+            for (RendomQuestionModel question : questions) {
+                writer.append(question.getFragetext())
+                        .append(",")
+                        .append(question.getSelectedOptionIndex() != 7 ? question.getOptions().get(question.getSelectedOptionIndex()) : "")
+                        .append("\n");
+            }
+            // Adding comments to CSV file
+            writer.append("Kommentare,").append(editTextKommentare.getText().toString()).append("\n");
+            writer.flush();
+            writer.close();
+            Toast.makeText(getApplicationContext(), "Data saved to CSV file", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Log.e("CSV", "Error writing CSV file: " + e.getMessage());
+        }
+    }
 
 }
