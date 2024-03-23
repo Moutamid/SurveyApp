@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -11,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.fxn.stash.Stash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.RendomQuestionModelSlider;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.BewetungDerFahrtQuestionAdapter;
@@ -18,6 +20,13 @@ import com.moutamid.surveyapp.helper.CompleteDialogClass;
 import com.moutamid.surveyapp.helper.CompleteQuizDialogClass;
 import com.moutamid.surveyapp.helper.NonSwipeableViewPager;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -73,19 +82,24 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         });    }
 
     private void saveDataAndMoveToNextScreen() {
-        Map<String, Object> questionData = new HashMap<>();
-        questionData.put("Fragetext", BewetungDerFahrtQuestionAdapter.question_main);
-        questionData.put("AusgewählterOptionstext", BewetungDerFahrtQuestionAdapter.progress_main + "");
-
-        databaseReference.child(Stash.getString("device_id") + key + "___" + Stash.getString("name")).push().setValue(questionData)
-                .addOnSuccessListener(aVoid -> {
-                    BewetungDerFahrtQuestionAdapter.progress_main = 0;
-                    CompleteQuizDialogClass cdd = new CompleteQuizDialogClass(BewertungDerFahrtActivity.this);
-                    cdd.show();
-                 })
-                .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        for (int i = 0; i < adapter.getCount(); i++) {
+            RendomQuestionModelSlider question = adapter.getItem(i);
+            Map<String, Object> questionData = new HashMap<>();
+            questionData.put("Fragetext", question.getFragetext());
+            questionData.put("AusgewählterOptionstext", question.getSelectedOptionIndex());
+            int finalI = i;
+            databaseReference.child(Stash.getString("device_id") + key + "___" + Stash.getString("name")).push().setValue(questionData)
+                    .addOnSuccessListener(aVoid -> {
+                        if (finalI == adapter.getCount() - 1) {
+                            BewetungDerFahrtQuestionAdapter.progress_main = 0;
+                            CompleteQuizDialogClass cdd = new CompleteQuizDialogClass(BewertungDerFahrtActivity.this);
+                            cdd.show();
+                            saveDataToCSV(adapter.getQuestions());
+                        }
+                    })
+                    .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
+        }
     }
-
 
     private boolean validateAllQuestions() {
 
@@ -168,8 +182,36 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         );
         questions.add(new RendomQuestionModelSlider("Wie bewerten Sie die Unterstützung bei der Fahrzeugführung insgesamt?", options7, 0, -1.0f));
 
-        // Add more questions as needed...
 
         return questions;
     }
+    private void saveDataToCSV(List<RendomQuestionModelSlider> questions) {
+        String filename = "survey_data.csv";
+        String title = "\nBewertungDerFahrt\n\n";
+        String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
+
+        File csvFile = new File(getExternalFilesDir(null), filename);
+
+        try {
+            FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
+            writer.append(title);
+            writer.append(csvHeader);yy
+
+            for (int i = 0; i < questions.size(); i++) {
+                RendomQuestionModelSlider question = questions.get(i);
+                String questionText = question.getFragetext().replace("\"", "\"\""); // Escape double quotes
+                writer.append(String.valueOf(i + 1)).append(",\"") // Append question number and start quote
+                        .append(questionText).append("\",\"") // Append question text and start quote
+                        .append(question.getSelectedOptionIndex() + "").append("\"") // Append selected option
+                        .append("\n");
+            }
+
+            writer.flush();
+            writer.close();
+            Toast.makeText(getApplicationContext(), "Data saved to CSV file", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Log.e("CSV", "Error writing CSV file: " + e.getMessage());
+        }
+    }
+
 }

@@ -80,4 +80,7 @@ public class BewetungDerFahrtQuestionAdapter extends PagerAdapter {
     public List<RendomQuestionModelSlider> getQuestions() {
         return questions;
     }
+    public RendomQuestionModelSlider getItem(int position) {
+        return questions.get(position);
+    }
 }

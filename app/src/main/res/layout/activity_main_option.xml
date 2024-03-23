@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="30dp"
-
+android:onClick="vora"
         android:layout_marginTop="50dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="10dp"
@@ -58,7 +58,7 @@
         android:backgroundTint="#C5123E"
         android:fontFamily="@font/poppins_bold"
         android:text="Bwewrtung der Fahrt"
-
+android:onClick="bewer"
         android:textAllCaps="false"
         android:textColor="@color/white" />
 

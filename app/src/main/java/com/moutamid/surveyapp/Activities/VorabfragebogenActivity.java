@@ -21,6 +21,9 @@ import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -343,13 +346,56 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         questionData4.put("Kommentare", editTextKommentare.getText().toString());
 
         // Add the data to Realtime Database
-       
-            databaseReference.child(Stash.getString("device_id") + key + "___" +Stash.getString("name")).push().setValue(questionData4)
+
+        databaseReference.child(Stash.getString("device_id") + key + "___" + Stash.getString("name")).push().setValue(questionData4)
                 .addOnSuccessListener(aVoid -> Log.d("RealtimeDatabase", "Data added successfully"))
                 .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
 
-        // All questions are answered
+        List<RendomQuestionModel> allQuestions = new ArrayList<>();
+
+        // Merge questions from all adapters
+        allQuestions.addAll(adapter1.getQuestions());
+        allQuestions.addAll(adapter2.getQuestions());
+        allQuestions.addAll(adapter3.getQuestions());
+        allQuestions.addAll(adapter3.getQuestions());
+        allQuestions.addAll(adapter4.getQuestions());
+        allQuestions.addAll(adapter5.getQuestions());
+
+        saveDataToCSV(allQuestions);
         return true;
+    }
+
+    private void saveDataToCSV(List<RendomQuestionModel> questions) {
+        String filename = "survey_data.csv";
+        String title = "\nVorabfragebogen\n\n";
+        String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
+
+        File csvFile = new File(getExternalFilesDir(null), filename);
+
+        try {
+            FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
+            writer.append(title);
+            writer.append(csvHeader);
+
+            for (int i = 0; i < questions.size(); i++) {
+                RendomQuestionModel question = questions.get(i);
+                String questionText = question.getFragetext().replace("\"", "\"\""); // Escape double quotes
+                writer.append(String.valueOf(i + 1)).append(",\"") // Append question number and start quote
+                        .append(questionText).append("\",\"") // Append question text and start quote
+                        .append(question.getOptions().get(question.getSelectedOptionIndex())).append("\"") // Append selected option
+                        .append("\n");
+            }
+
+            // Add comment to CSV
+            writer.append(String.valueOf(questions.size() + 1)).append(",\"Kommentare\",\"")
+                    .append(editTextKommentare.getText().toString()).append("\"\n");
+
+            writer.flush();
+            writer.close();
+            Toast.makeText(getApplicationContext(), "Data saved to CSV file", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Log.e("CSV", "Error writing CSV file: " + e.getMessage());
+        }
     }
 
 }
