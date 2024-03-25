@@ -195,7 +195,7 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         try {
             FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
             writer.append(title);
-            writer.append(csvHeader);yy
+            writer.append(csvHeader);
 
             for (int i = 0; i < questions.size(); i++) {
                 RendomQuestionModelSlider question = questions.get(i);
@@ -208,7 +208,6 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
 
             writer.flush();
             writer.close();
-            Toast.makeText(getApplicationContext(), "Data saved to CSV file", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e("CSV", "Error writing CSV file: " + e.getMessage());
         }

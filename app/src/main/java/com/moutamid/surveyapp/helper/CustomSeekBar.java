@@ -14,6 +14,7 @@ public class CustomSeekBar extends AppCompatSeekBar {
     private Paint textPaint;
     private Rect textBounds = new Rect();
     private String text = "";
+    private int bottomMargin = 20; // Set your desired bottom margin here
 
     public CustomSeekBar(Context context) {
         super(context);
@@ -48,7 +49,7 @@ public class CustomSeekBar extends AppCompatSeekBar {
         float height = getHeight();
 
         textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        textPaint.setTextSize(45);
+        textPaint.setTextSize(35);
         textPaint.getTextBounds(text, 0, text.length(), textBounds);
 
         float position = (width / getMax()) * getProgress();
@@ -62,7 +63,7 @@ public class CustomSeekBar extends AppCompatSeekBar {
             textXStart -= (textXEnd - width + 30);
         }
 
-        float yPosition = height;
+        float yPosition = height - bottomMargin; // Adjusted with bottom margin
 
         canvas.drawText(text, textXStart, yPosition, textPaint);
     }

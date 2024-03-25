@@ -97,7 +97,7 @@ public class VorabfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    Intent intent = new Intent(VorabfragebogenActivity.this, BewertungDerFahrtActivity.class);
+                    Intent intent = new Intent(VorabfragebogenActivity.this, MainOptionActivity.class);
                     startActivity(intent);
                 finish();}
                 else {
@@ -392,7 +392,6 @@ public class VorabfragebogenActivity extends AppCompatActivity {
 
             writer.flush();
             writer.close();
-            Toast.makeText(getApplicationContext(), "Data saved to CSV file", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e("CSV", "Error writing CSV file: " + e.getMessage());
         }

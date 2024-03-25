@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.moutamid.surveyapp.Activities.AbschlussfragebogenActivity;
 import com.moutamid.surveyapp.Activities.BewertungDerFahrtActivity;
+import com.moutamid.surveyapp.Activities.MainOptionActivity;
 import com.moutamid.surveyapp.Activities.ProfileActivity;
 import com.moutamid.surveyapp.HomeActivity;
 import com.moutamid.surveyapp.R;
@@ -44,7 +45,7 @@ public class CompleteQuizDialogClass extends Dialog {
         finnall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                c.startActivity(new Intent(c, AbschlussfragebogenActivity.class));
+                c.startActivity(new Intent(c, MainOptionActivity.class));
                 c.finishAffinity();
             }
         });

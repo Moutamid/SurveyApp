@@ -1,5 +1,6 @@
 package com.moutamid.surveyapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -75,8 +76,8 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    CompleteDialogClass cdd = new CompleteDialogClass(AbschlussfragebogenActivity.this);
-                    cdd.show();
+                    Intent intent = new Intent(AbschlussfragebogenActivity.this, MainOptionActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
                 }
@@ -337,7 +338,6 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
 
             writer.flush();
             writer.close();
-            Toast.makeText(getApplicationContext(), "Data saved to CSV file", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e("CSV", "Error writing CSV file: " + e.getMessage());
         }
