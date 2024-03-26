@@ -27,10 +27,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class BewertungDerFahrtActivity extends AppCompatActivity {
@@ -186,7 +189,9 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         return questions;
     }
     private void saveDataToCSV(List<RendomQuestionModelSlider> questions) {
-        String filename = "survey_data.csv";
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String name = Stash.getString("name");
+        String filename = "survey_data_" +name+  ".csv"; // Append timestamp to the file name
         String title = "\nBewertungDerFahrt\n\n";
         String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
 
@@ -199,7 +204,7 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
 
             for (int i = 0; i < questions.size(); i++) {
                 RendomQuestionModelSlider question = questions.get(i);
-                String questionText = question.getFragetext().replace("\"", "\"\""); // Escape double quotes
+                String questionText = question.getFragetext().replaceAll(",", ""); // Escape double quotes
                 writer.append(String.valueOf(i + 1)).append(",\"") // Append question number and start quote
                         .append(questionText).append("\",\"") // Append question text and start quote
                         .append(question.getSelectedOptionIndex() + "").append("\"") // Append selected option
