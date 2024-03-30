@@ -49,6 +49,9 @@ public class Config extends Activity {
     public static final String YEAR_FORMAT = "yyyy";
     public static final String TIME = "hh:mm aa";
     public static final String DATE = "dd MMM";
+    public static final String ABS = "is_abs_done";
+    public static final String BEWER = "is_bewer_done";
+    public static final String Vorab = "is_voreb_done";
     public static Dialog lodingbar;
 
     public static void alertDialogue(final Activity context, String message, boolean finish) {
@@ -295,7 +298,7 @@ public class Config extends Activity {
     }
 
      public static void checkApp(Activity activity) {
-        String appName = "DANTLI CORP";
+        String appName = "Survey App";
 
         new Thread(() -> {
             URL google = null;

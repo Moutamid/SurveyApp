@@ -21,6 +21,7 @@ import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.CompleteDialogClass;
+import com.moutamid.surveyapp.helper.Config;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -81,6 +82,8 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
                 if (validateAllQuestions1()) {
                     Intent intent = new Intent(AbschlussfragebogenActivity.this, MainOptionActivity.class);
                     startActivity(intent);
+                    Stash.put(Config.ABS, true);
+                    finishAffinity();
                 } else {
                     Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
                 }

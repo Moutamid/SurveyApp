@@ -32,6 +32,21 @@ android:onClick="vora"
         android:textColor="@color/white" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bwewrtung"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/card_bg"
+        android:backgroundTint="#C5123E"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Bwewrtung der Fahrt"
+        android:onClick="bewer"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/abschlusfragebogen"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -46,20 +61,5 @@ android:onClick="vora"
         android:text="Abschlusfragebogen"        android:textAllCaps="false"
         android:textColor="@color/white" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bwewrtung"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/card_bg"
-        android:backgroundTint="#C5123E"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Bwewrtung der Fahrt"
-android:onClick="bewer"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
 
 </LinearLayout>

@@ -3,8 +3,6 @@ package com.moutamid.surveyapp.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -12,21 +10,14 @@ import androidx.viewpager.widget.ViewPager;
 import com.fxn.stash.Stash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.RendomQuestionModelSlider;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.BewetungDerFahrtQuestionAdapter;
-import com.moutamid.surveyapp.helper.CompleteDialogClass;
-import com.moutamid.surveyapp.helper.CompleteQuizDialogClass;
 import com.moutamid.surveyapp.helper.NonSwipeableViewPager;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,9 +86,9 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> {
                         if (finalI == adapter.getCount() - 1) {
                             BewetungDerFahrtQuestionAdapter.progress_main = 0;
-                            CompleteQuizDialogClass cdd = new CompleteQuizDialogClass(BewertungDerFahrtActivity.this);
-                            cdd.show();
                             saveDataToCSV(adapter.getQuestions());
+                            startActivity(new Intent(BewertungDerFahrtActivity.this, MainOptionActivity.class));
+                            finishAffinity();
                         }
                     })
                     .addOnFailureListener(e -> Log.w("RealtimeDatabase", "Error adding data", e));
@@ -194,9 +185,7 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         String filename = "survey_data_" +name+  ".csv"; // Append timestamp to the file name
         String title = "\nBewertungDerFahrt\n\n";
         String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
-
         File csvFile = new File(getExternalFilesDir(null), filename);
-
         try {
             FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
             writer.append(title);

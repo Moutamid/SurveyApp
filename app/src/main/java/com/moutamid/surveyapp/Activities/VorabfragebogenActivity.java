@@ -20,6 +20,7 @@ import com.moutamid.surveyapp.Adapter.RandomQuestionAdapter;
 import com.moutamid.surveyapp.Model.RendomQuestionModel;
 import com.moutamid.surveyapp.Model.SelectedAnswerModel;
 import com.moutamid.surveyapp.R;
+import com.moutamid.surveyapp.helper.Config;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -102,7 +103,9 @@ public class VorabfragebogenActivity extends AppCompatActivity {
                 if (validateAllQuestions1()) {
                     Intent intent = new Intent(VorabfragebogenActivity.this, MainOptionActivity.class);
                     startActivity(intent);
-                finish();}
+                    Stash.put(Config.Vorab, true);
+                    finishAffinity();
+                }
                 else {
                     Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
                 }
