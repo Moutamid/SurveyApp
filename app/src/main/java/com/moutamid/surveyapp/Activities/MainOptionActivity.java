@@ -40,7 +40,6 @@ public class MainOptionActivity extends AppCompatActivity {
     }
 
     public void vora(View view) {
-        if (!Stash.getBoolean(Config.Vorab)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (above13Check()) {
                     shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -60,10 +59,7 @@ public class MainOptionActivity extends AppCompatActivity {
                     startActivity(new Intent(this, VorabfragebogenActivity.class));
                 }
             }
-        } else {
-            Toast.makeText(this, "Der Fragebogen ist fertig.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, ProfileActivity.class));
-            finish(); }
+
     }
 
     public void absc(View view) {

@@ -101,9 +101,9 @@ public class VorabfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    Intent intent = new Intent(VorabfragebogenActivity.this, MainOptionActivity.class);
+                    Intent intent = new Intent(VorabfragebogenActivity.this, ProfileActivity.class);
                     startActivity(intent);
-                    Stash.put(Config.Vorab, true);
+//                    Stash.put(Config.Vorab, true);
                     finishAffinity();
                 }
                 else {
