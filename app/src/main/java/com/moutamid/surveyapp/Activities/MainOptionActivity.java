@@ -63,7 +63,7 @@ public class MainOptionActivity extends AppCompatActivity {
     }
 
     public void absc(View view) {
-        if (!Stash.getBoolean(Config.ABS)) {
+//        if (!Stash.getBoolean(Config.ABS)) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (above13Check()) {
@@ -84,11 +84,11 @@ public class MainOptionActivity extends AppCompatActivity {
                     startActivity(new Intent(this, AbschlussfragebogenActivity.class));
                 }
             }
-        } else {
-            Toast.makeText(this, "Der Fragebogen ist fertig.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, ProfileActivity.class));
-            finish();
-        }
+//        } else {
+//            Toast.makeText(this, "Der Fragebogen ist fertig.", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(this, ProfileActivity.class));
+//            finish();
+//        }
     }
 
     public void bewer(View view) {

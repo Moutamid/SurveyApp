@@ -37,8 +37,8 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Stash.put(Config.ABS, false);
-                    Stash.put(Config.Vorab, false);
+//                    Stash.put(Config.ABS, false);
+//                    Stash.put(Config.Vorab, false);
                     Stash.put("name", edt_name.getText().toString());
                     String mId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                     Stash.put("device_id", mId);

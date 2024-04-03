@@ -80,9 +80,9 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ButtonClicked", "Submit button clicked");
                 if (validateAllQuestions1()) {
-                    Intent intent = new Intent(AbschlussfragebogenActivity.this, MainOptionActivity.class);
+                    Intent intent = new Intent(AbschlussfragebogenActivity.this, ProfileActivity.class);
                     startActivity(intent);
-                    Stash.put(Config.ABS, true);
+//                    Stash.put(Config.ABS, true);
                     finishAffinity();
                 } else {
                     Toast.makeText(getApplicationContext(), "Bitte wählen Sie alle Fragen aus.", Toast.LENGTH_LONG).show();
