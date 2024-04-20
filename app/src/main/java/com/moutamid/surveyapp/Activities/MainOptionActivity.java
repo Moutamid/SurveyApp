@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,6 +19,8 @@ import com.fxn.stash.Stash;
 import com.moutamid.surveyapp.HomeActivity;
 import com.moutamid.surveyapp.R;
 import com.moutamid.surveyapp.helper.Config;
+
+import java.io.File;
 
 public class MainOptionActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -82,6 +86,7 @@ public class MainOptionActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainOptionActivity.this, permissions, 2);
                 } else {
                     startActivity(new Intent(this, AbschlussfragebogenActivity.class));
+
                 }
             }
 //        } else {
@@ -125,4 +130,5 @@ public class MainOptionActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(MainOptionActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(MainOptionActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
     }
+
 }

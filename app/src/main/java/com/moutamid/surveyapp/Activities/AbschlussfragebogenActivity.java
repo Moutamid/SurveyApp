@@ -2,6 +2,7 @@ package com.moutamid.surveyapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +55,22 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_abschlussfragebogen);
-
+        if (isExternalStorageWritable()) {
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File newFolder = new File(downloadsDir, "SurveyApp");
+            if (!newFolder.exists()) {
+                boolean success = newFolder.mkdir();
+                if (success) {
+                    Log.d("MainActivity", "Folder created successfully");
+                } else {
+                    Log.e("MainActivity", "Failed to create folder");
+                }
+            } else {
+                Log.d("MainActivity", "Folder already exists");
+            }
+        } else {
+            Log.e("MainActivity", "External storage is not writable");
+        }
         editTextKommentare = findViewById(R.id.editTextKommentare);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -323,14 +339,13 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
         String filename = "survey_data_" +name+ ".csv"; // Append timestamp to the file name
         String title = "\nAbschlussfragebogen\n\n";
         String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
-
-        File csvFile = new File(getExternalFilesDir(null), filename);
-
+        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File newFolder = new File(downloadsDir, "SurveyApp");
+        File csvFile = new File(newFolder, filename);
         try {
             FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
             writer.append(title);
             writer.append(csvHeader);
-
             for (int i = 0; i < questions.size(); i++) {
                 RendomQuestionModel question = questions.get(i);
                 String questionText = question.getFragetext().replaceAll(",", ""); // Escape double quotes
@@ -340,15 +355,16 @@ public class AbschlussfragebogenActivity extends AppCompatActivity {
                         .append("\n");
             }
 
-            // Add comment to CSV
             writer.append(String.valueOf(questions.size() + 1)).append(",\"Kommentare\",\"")
                     .append(editTextKommentare.getText().toString()).append("\"\n");
-
             writer.flush();
             writer.close();
         } catch (IOException e) {
             Log.e("CSV", "Error writing CSV file: " + e.getMessage());
         }
     }
-
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
 }

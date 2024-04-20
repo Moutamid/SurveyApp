@@ -2,6 +2,7 @@ package com.moutamid.surveyapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +41,22 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bewertung_der_fahrt);
-
+        if (isExternalStorageWritable()) {
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File newFolder = new File(downloadsDir, "SurveyApp");
+            if (!newFolder.exists()) {
+                boolean success = newFolder.mkdir();
+                if (success) {
+                    Log.d("MainActivity", "Folder created successfully");
+                } else {
+                    Log.e("MainActivity", "Failed to create folder");
+                }
+            } else {
+                Log.d("MainActivity", "Folder already exists");
+            }
+        } else {
+            Log.e("MainActivity", "External storage is not writable");
+        }
         viewPager = findViewById(R.id.viewPager);
         List<RendomQuestionModelSlider> questionList = generateDynamicQuestionList();
         adapter = new BewetungDerFahrtQuestionAdapter(questionList, this);
@@ -185,7 +201,9 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         String filename = "survey_data_" +name+  ".csv"; // Append timestamp to the file name
         String title = "\nBewertungDerFahrt\n\n";
         String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
-        File csvFile = new File(getExternalFilesDir(null), filename);
+        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File newFolder = new File(downloadsDir, "SurveyApp");
+        File csvFile = new File(newFolder, filename);
         try {
             FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
             writer.append(title);
@@ -206,5 +224,8 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
             Log.e("CSV", "Error writing CSV file: " + e.getMessage());
         }
     }
-
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
 }

@@ -2,6 +2,7 @@ package com.moutamid.surveyapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +55,22 @@ public class VorabfragebogenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if (isExternalStorageWritable()) {
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File newFolder = new File(downloadsDir, "SurveyApp");
+            if (!newFolder.exists()) {
+                boolean success = newFolder.mkdir();
+                if (success) {
+                    Log.d("MainActivity", "Folder created successfully");
+                } else {
+                    Log.e("MainActivity", "Failed to create folder");
+                }
+            } else {
+                Log.d("MainActivity", "Folder already exists");
+            }
+        } else {
+            Log.e("MainActivity", "External storage is not writable");
+        }
         recyclerView = findViewById(R.id.recyclerView);
         editTextKommentare = findViewById(R.id.editTextKommentare);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -374,11 +390,13 @@ public class VorabfragebogenActivity extends AppCompatActivity {
     private void saveDataToCSV(List<RendomQuestionModel> questions) {
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = Stash.getString("name");
-        String filename = "survey_data_" +name+  ".csv"; // Append timestamp to the file name
+        String filename = "survey_data_" +name+  ".csv";
         String title = "\nVorabfragebogen\n\n";
         String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
 
-        File csvFile = new File(getExternalFilesDir(null), filename);
+        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File newFolder = new File(downloadsDir, "SurveyApp");
+        File csvFile = new File(newFolder, filename);
 
         try {
             FileWriter writer = new FileWriter(csvFile, true); // Open the file in append mode
@@ -403,6 +421,10 @@ public class VorabfragebogenActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("CSV", "Error writing CSV file: " + e.getMessage());
         }
+    }
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
 }
