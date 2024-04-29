@@ -86,7 +86,6 @@ public class MainOptionActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainOptionActivity.this, permissions, 2);
                 } else {
                     startActivity(new Intent(this, AbschlussfragebogenActivity.class));
-
                 }
             }
 //        } else {

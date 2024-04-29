@@ -199,7 +199,7 @@ public class BewertungDerFahrtActivity extends AppCompatActivity {
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = Stash.getString("name");
         String filename = "survey_data_" +name+  ".csv"; // Append timestamp to the file name
-        String title = "\nBewertungDerFahrt\n\n";
+        String title = "\nBewertungderFahrt\n\n";
         String csvHeader = "Question Number,Fragetext,AusgewählterOptionstext\n";
         File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File newFolder = new File(downloadsDir, "SurveyApp");

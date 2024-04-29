@@ -26,7 +26,7 @@ android:onClick="vora"
         android:background="@drawable/card_bg"
         android:backgroundTint="#C5123E"
         android:fontFamily="@font/poppins_bold"
-        android:text="Varabfragebogen"
+        android:text="Vorabfragebogen"
 
         android:textAllCaps="false"
         android:textColor="@color/white" />
@@ -42,7 +42,7 @@ android:onClick="vora"
         android:background="@drawable/card_bg"
         android:backgroundTint="#C5123E"
         android:fontFamily="@font/poppins_bold"
-        android:text="Bwewrtung der Fahrt"
+        android:text="Bewertung der Fahrt"
         android:onClick="bewer"
         android:textAllCaps="false"
         android:textColor="@color/white" />
@@ -58,7 +58,7 @@ android:onClick="vora"
         android:background="@drawable/card_bg"
         android:backgroundTint="#C5123E"
         android:fontFamily="@font/poppins_bold"
-        android:text="Abschlusfragebogen"        android:textAllCaps="false"
+        android:text="Abschlussfragebogen"        android:textAllCaps="false"
         android:textColor="@color/white" />
 
 
